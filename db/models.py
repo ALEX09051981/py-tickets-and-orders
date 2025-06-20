@@ -1,5 +1,5 @@
-from django.utils import timezone
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 
@@ -60,7 +60,7 @@ class MovieSession(models.Model):
 
 
 class Order(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(
         to="db.User", on_delete=models.CASCADE, related_name="orders"
     )
@@ -70,7 +70,7 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         if not self.created_at:
-            self.created_at = timezone.now()
+            self.created_at = timezone.now().replace(tzinfo=None)
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
