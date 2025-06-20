@@ -1,7 +1,6 @@
 from typing import List, Dict, Optional
 from datetime import datetime
 from django.db import transaction
-from django.utils import timezone
 from django.db.models import QuerySet
 from db.models import Order, Ticket, User
 
@@ -14,14 +13,11 @@ def create_order(
 ) -> Order:
     user = User.objects.get(username=username)
 
-    if date:
-        # Parse date string without timezone info
-        created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
-    else:
-        created_at = timezone.now().replace(tzinfo=None)
+    order = Order.objects.create(user=user)
 
-    order = Order(user=user, created_at=created_at)
-    order.save()
+    if date:
+        order.created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
+        order.save(update_fields=["created_at"])
 
     for ticket_data in tickets:
         Ticket.objects.create(
