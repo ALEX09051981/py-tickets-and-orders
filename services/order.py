@@ -15,8 +15,6 @@ def create_order(
     user = User.objects.get(username=username)
 
     order = Order(user=user)
-    if date:
-        order.created_at = parse_datetime(date)
     order.save()
 
     for ticket_data in tickets:

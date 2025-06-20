@@ -60,7 +60,7 @@ class MovieSession(models.Model):
 
 
 class Order(models.Model):
-    created_at = models.DateTimeField(null=False, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
         to="db.User", on_delete=models.CASCADE, related_name="orders"
     )
